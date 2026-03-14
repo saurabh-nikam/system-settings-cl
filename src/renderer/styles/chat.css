@@ -1,0 +1,117 @@
+/* ── Messages container ─────────────────────────────────────────────────────── */
+#messages {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  scroll-behavior: smooth;
+}
+
+/* ── Message rows ───────────────────────────────────────────────────────────── */
+.message {
+  display: flex;
+  width: 100%;
+  animation: msgIn 0.12s ease;
+}
+
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.message-user      { justify-content: flex-end; }
+.message-assistant { justify-content: flex-start; }
+
+/* ── Bubbles ────────────────────────────────────────────────────────────────── */
+.bubble {
+  width: 100%;
+  max-width: 100%;
+  padding: 4px 6px;
+  border-radius: 0;
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.message-user .bubble {
+  background: rgba(91,140,255,0.10);
+  border-left: 2px solid rgba(91,140,255,0.35);
+  color: var(--color-text);
+  border-radius: 0;
+  padding-left: 6px;
+}
+
+.message-assistant .bubble {
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  padding-left: 0;
+}
+
+/* ── Input area ─────────────────────────────────────────────────────────────── */
+#input-area {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  padding: 3px 4px;
+  border-top: 1px solid var(--color-border-light);
+  background: var(--color-bg-secondary);
+  flex-shrink: 0;
+}
+
+#user-input {
+  flex: 1;
+  width: 0;
+  background: transparent;
+  border: none;
+  border-top: 1px solid transparent;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+  padding: 3px 4px;
+  resize: none;
+  outline: none;
+  height: 22px;
+  min-height: 22px;
+  max-height: 22px;
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+}
+
+#user-input::placeholder { color: var(--color-text-muted); }
+
+#user-input:focus {
+  border-top-color: rgba(91,140,255,0.35);
+}
+
+#btn-send {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  border: none;
+  border-radius: 3px;
+  background: rgba(91,140,255,0.25);
+  color: var(--color-accent);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  transition: background var(--transition-fast);
+  flex-shrink: 0;
+  align-self: flex-end;
+  margin-bottom: 1px;
+}
+
+#btn-send:hover  { background: rgba(91,140,255,0.40); }
+#btn-send:active { opacity: 0.7; }
+
+/* Error text inside bubbles */
+.error-text {
+  color: var(--color-error);
+  font-size: var(--font-size-xs);
+}

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none';" />
+  <title>System Setting</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/window.css" />
+  <link rel="stylesheet" href="styles/chat.css" />
+  <link rel="stylesheet" href="styles/assistball.css" />
+  <link rel="stylesheet" href="styles/settings.css" />
+  <link rel="stylesheet" href="styles/markdown.css" />
+</head>
+<body>
+
+  <!-- ── Chat View ──────────────────────────────────────────────── -->
+  <div id="chat-view" class="view active">
+    <div id="top-bar">
+      <div id="drag-region">
+        <span id="app-title">System Setting</span>
+      </div>
+      <div id="provider-info">
+        <span id="active-provider-label"></span>
+        <span id="active-model-label"></span>
+      </div>
+      <div id="window-controls">
+        <button id="btn-opacity" title="Opacity" aria-label="Opacity">◑</button>
+        <button id="btn-ball"    title="AssistBall" aria-label="Collapse to ball">⬤</button>
+        <button id="btn-settings" title="Settings" aria-label="Settings">⚙</button>
+        <button id="btn-close"  title="Close" aria-label="Close">✕</button>
+      </div>
+    </div>
+
+    <!-- Opacity panel (hidden by default) -->
+    <div id="opacity-panel" class="hidden">
+      <label for="opacity-slider">Opacity</label>
+      <input type="range" id="opacity-slider" min="15" max="100" value="95" />
+      <span id="opacity-value">95%</span>
+    </div>
+
+    <!-- Messages -->
+    <div id="messages" role="log" aria-live="polite" aria-label="Chat messages"></div>
+
+    <!-- Input area -->
+    <div id="input-area">
+      <textarea
+        id="user-input"
+        rows="1"
+        placeholder="Ask"
+        aria-label="Message input"
+      ></textarea>
+      <button id="btn-send" aria-label="Send message">↑</button>
+    </div>
+  </div>
+
+  <!-- ── AssistBall View ────────────────────────────────────────── -->
+  <div id="ball-view" class="view hidden">
+    <div id="assist-ball" role="button" aria-label="Expand chat" tabindex="0">
+      <div class="ball-inner">
+        <div class="ball-pulse"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Settings Modal ─────────────────────────────────────────── -->
+  <div id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Settings">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Settings</h2>
+        <button id="btn-settings-close" aria-label="Close settings">✕</button>
+      </div>
+      <div class="modal-body">
+
+        <!-- ── AI Provider & Model ─────────────────────────────── -->
+        <section class="settings-section">
+          <h3>AI Provider</h3>
+          <div class="form-group">
+            <label for="settings-provider">Provider</label>
+            <select id="settings-provider" class="settings-select">
+              <option value="gemini">Google Gemini</option>
+              <option value="openai">OpenAI</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="settings-model">Model</label>
+            <select id="settings-model" class="settings-select"></select>
+          </div>
+          <div class="form-group">
+            <label for="settings-model-custom">Add custom model</label>
+            <div class="add-model-row">
+              <input
+                type="text"
+                id="settings-model-custom"
+                placeholder="e.g. gemini-2.5-pro-preview"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <button id="btn-add-model">Add</button>
+            </div>
+            <div id="custom-models-list"></div>
+          </div>
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="settings-google-search" />
+              Enable Google Search grounding <span class="hint">(Gemini only)</span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="settings-thinking" checked />
+              Enable deep thinking <span class="hint">(ThinkingLevel.HIGH)</span>
+            </label>
+          </div>
+        </section>
+
+        <!-- ── API Keys ───────────────────────────────────────── -->
+        <section class="settings-section">
+          <h3>API Keys</h3>
+          <div class="form-group">
+            <label for="gemini-key-input">Gemini API Key</label>
+            <div class="key-input-row">
+              <input type="password" id="gemini-key-input" placeholder="AIza…" autocomplete="off" />
+              <button class="btn-save-key" data-provider="gemini">Save</button>
+            </div>
+            <span class="key-status" id="gemini-key-status"></span>
+          </div>
+          <div class="form-group">
+            <label for="openai-key-input">OpenAI API Key</label>
+            <div class="key-input-row">
+              <input type="password" id="openai-key-input" placeholder="sk-…" autocomplete="off" />
+              <button class="btn-save-key" data-provider="openai">Save</button>
+            </div>
+            <span class="key-status" id="openai-key-status"></span>
+          </div>
+        </section>
+
+        <section class="settings-section">
+          <h3>Appearance</h3>
+          <div class="form-group inline">
+            <label for="settings-opacity">Window Opacity</label>
+            <input type="range" id="settings-opacity" min="15" max="100" value="95" />
+            <span id="settings-opacity-value">95%</span>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Third-party libs from node_modules (no bundler needed in Electron) -->
+  <script src="../../node_modules/marked/marked.min.js"></script>
+  <script src="../../node_modules/@highlightjs/cdn-assets/highlight.min.js"></script>
+  <script src="../../node_modules/dompurify/dist/purify.min.js"></script>
+
+  <!-- Scripts (load order matters) -->
+  <script src="utils/markdownParser.js"></script>
+  <script src="utils/streamBuffer.js"></script>
+  <script src="components/TopBar.js"></script>
+  <script src="components/MessageBubble.js"></script>
+  <script src="components/ChatView.js"></script>
+  <script src="components/AssistBall.js"></script>
+  <script src="components/SettingsModal.js"></script>
+  <script src="components/OpacitySlider.js"></script>
+  <script src="ai/AIProviderBase.js"></script>
+  <script src="ai/GeminiProvider.js"></script>
+  <script src="ai/OpenAIProvider.js"></script>
+  <script src="ai/ProviderFactory.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

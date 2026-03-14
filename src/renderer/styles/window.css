@@ -1,0 +1,138 @@
+/* ── Window shell — frosted glass container + drag regions ─────────────────── */
+
+#chat-view {
+  background: var(--color-bg);
+  backdrop-filter: blur(28px) saturate(200%) brightness(1.05);
+  -webkit-backdrop-filter: blur(28px) saturate(200%) brightness(1.05);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow:
+    0 0  0  1px rgba(255,255,255,0.04) inset,
+    0 24px 48px rgba(0,0,0,0.55),
+    0  4px 12px rgba(0,0,0,0.30);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Top bar ────────────────────────────────────────────────────────────────── */
+#top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 0 6px;
+  height: 26px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--color-border-light);
+
+  /* Native macOS window drag — the drag region makes the whole bar draggable */
+  -webkit-app-region: drag;
+}
+
+/* Every interactive element inside drag region must opt out */
+#top-bar button,
+#top-bar select,
+#window-controls {
+  -webkit-app-region: no-drag;
+}
+
+#drag-region {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+#app-title {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#window-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+#window-controls button {
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+#window-controls button:hover {
+  background: rgba(255,255,255,0.10);
+  color: var(--color-text);
+}
+
+#btn-close:hover {
+  background: rgba(255, 80, 80, 0.20) !important;
+  color: #ff6b6b !important;
+}
+
+/* ── Opacity panel ──────────────────────────────────────────────────────────── */
+#opacity-panel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border-light);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  -webkit-app-region: no-drag;
+}
+
+#opacity-slider {
+  flex: 1;
+  height: 3px;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+#opacity-value {
+  min-width: 32px;
+  text-align: right;
+}
+
+/* ── Provider info inline in top bar ─────────────────────────────────────────── */
+#provider-info {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+  -webkit-app-region: drag;
+}
+
+#active-provider-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-accent);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+#active-model-label {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
